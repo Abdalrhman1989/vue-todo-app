@@ -28,7 +28,7 @@ jobs:
       run: npm run lint
 
     - name: Run unit tests
-      run: npm run test
+      run: npm run test:unit
 
     - name: Start application
       run: npm run dev &
