@@ -1,21 +1,21 @@
 <template>
-    <div class="todo-app">
-      <h1>To-Do List</h1>
-      <input
-        v-model="newTodo"
-        @keyup.enter="addTodo"
-        placeholder="Add a new task"
+  <div class="todo-app">
+    <h1>To-Do List</h1>
+    <input
+      v-model="newTodo"
+      @keyup.enter="addTodo"
+      placeholder="Add a new task"
+    >
+    <ul>
+      <TodoItem
+        v-for="(todo, index) in todos"
+        :key="index"
+        :todo="todo"
+        @remove="removeTodo(index)"
       />
-      <ul>
-        <TodoItem
-          v-for="(todo, index) in todos"
-          :key="index"
-          :todo="todo"
-          @remove="removeTodo(index)"
-        />
-      </ul>
-    </div>
-  </template>
+    </ul>
+  </div>
+</template>
   
   <script setup>
   import { ref } from 'vue'
