@@ -1,5 +1,7 @@
 import { defineConfig } from 'eslint-define-config';
 import vue from 'eslint-plugin-vue';
+import vueParser from 'vue-eslint-parser';
+import babelParser from '@babel/eslint-parser';
 
 export default defineConfig([
   {
@@ -15,7 +17,7 @@ export default defineConfig([
       },
     },
     plugins: {
-      vue: vue,
+      vue,
     },
     rules: {
       'vue/html-indent': ['error', 2],
@@ -36,15 +38,15 @@ export default defineConfig([
   {
     files: ['**/*.vue'],
     languageOptions: {
-      parser: 'vue-eslint-parser',
+      parser: vueParser,
       parserOptions: {
-        parser: '@babel/eslint-parser',
-        requireConfigFile: false,  // This line is important to avoid Babel config file errors
+        parser: babelParser,
         sourceType: 'module',
         ecmaVersion: 2021,
         ecmaFeatures: {
           jsx: true,
         },
+        requireConfigFile: false, // Add this line to disable the need for a Babel config file
       },
     },
   },
