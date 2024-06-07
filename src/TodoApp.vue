@@ -1,8 +1,11 @@
-<!-- src/TodoApp.vue -->
 <template>
     <div class="todo-app">
       <h1>To-Do List</h1>
-      <input v-model="newTodo" @keyup.enter="addTodo" placeholder="Add a new task" />
+      <input
+        v-model="newTodo"
+        @keyup.enter="addTodo"
+        placeholder="Add a new task"
+      />
       <ul>
         <TodoItem
           v-for="(todo, index) in todos"
@@ -15,21 +18,21 @@
   </template>
   
   <script setup>
-  import { ref } from 'vue';
-  import TodoItem from './components/TodoItem.vue';
+  import { ref } from 'vue'
+  import TodoItem from './components/TodoItem.vue'
   
-  const newTodo = ref('');
-  const todos = ref([]);
+  const newTodo = ref('')
+  const todos = ref([])
   
   function addTodo() {
     if (newTodo.value.trim()) {
-      todos.value.push({ text: newTodo.value.trim(), completed: false });
-      newTodo.value = '';
+      todos.value.push({ text: newTodo.value.trim(), completed: false })
+      newTodo.value = ''
     }
   }
   
   function removeTodo(index) {
-    todos.value.splice(index, 1);
+    todos.value.splice(index, 1)
   }
   </script>
   
