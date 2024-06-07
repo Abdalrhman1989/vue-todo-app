@@ -1,31 +1,30 @@
-cat <<EOT > src/tests/TodoApp.spec.js
-import { mount } from '@vue/test-utils'
-import { describe, it, expect } from 'vitest'
-import TodoApp from '../TodoApp.vue'
+// src/tests/TodoApp.spec.js
+import { mount } from '@vue/test-utils';
+import { describe, it, expect } from 'vitest';
+import TodoApp from '../TodoApp.vue';
 
 describe('TodoApp', () => {
-  it('should render the todo app', () => {
-    const wrapper = mount(TodoApp)
-    expect(wrapper.find('h1').text()).toBe('To-Do List')
-  })
+  it('should render the correct markup', () => {
+    const wrapper = mount(TodoApp);
+    console.log(wrapper.html());  // Log the HTML output to understand the structure
+    expect(wrapper.html()).toContain('<h1>To-Do List</h1>');
+  });
 
-  it('should add a new todo', async () => {
-    const wrapper = mount(TodoApp)
-    const input = wrapper.find('input')
-    await input.setValue('New Task')
-    await input.trigger('keyup.enter')
-    expect(wrapper.find('ul').text()).toContain('New Task')
-  })
+  it('should add a todo', async () => {
+    const wrapper = mount(TodoApp);
+    const input = wrapper.find('input');
+    await input.setValue('New Task');
+    await input.trigger('keyup.enter');
+    expect(wrapper.html()).toContain('New Task');
+  });
 
   it('should remove a todo', async () => {
-    const wrapper = mount(TodoApp)
-    const input = wrapper.find('input')
-    await input.setValue('Task to remove')
-    await input.trigger('keyup.enter')
-
-    const removeButton = wrapper.find('button')
-    await removeButton.trigger('click')
-    expect(wrapper.find('ul').text()).not.toContain('Task to remove')
-  })
-})
-EOT
+    const wrapper = mount(TodoApp);
+    const input = wrapper.find('input');
+    await input.setValue('New Task');
+    await input.trigger('keyup.enter');
+    const button = wrapper.find('button');
+    await button.trigger('click');
+    expect(wrapper.html()).not.toContain('New Task');
+  });
+});
