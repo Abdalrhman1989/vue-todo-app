@@ -31,14 +31,23 @@ jobs:
       run: npm run test:unit
 
     - name: Start application
-      run: npm run dev -- --port 5173 &
+      id: start-app
+      run: |
+        PORT=5173
+        while lsof -i :$PORT; do
+          PORT=$((PORT + 1))
+        done
+        echo "PORT=$PORT" >> $GITHUB_ENV
+        npm run dev -- --port $PORT &
       env:
         CI: true
+
+    - name: Wait for the app to be available
+      run: curl --retry 10 --retry-delay 5 --retry-connrefused http://localhost:$PORT
 
     - name: Run Cypress tests
       uses: cypress-io/github-action@v5
       with:
-        start: npm run dev -- --port 5173
-        wait-on: http://localhost:5173
-        wait-on-timeout: 120
+        start: npm run dev -- --port ${{ env.PORT }}
+        wait-on: http://localhost:${{ env.PORT }}
         config-file: cypress.config.js
