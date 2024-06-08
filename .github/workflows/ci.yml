@@ -37,17 +37,15 @@ jobs:
         echo $! > .pidfile
         sleep 5  # Wait a few seconds to allow the server to start
         if lsof -i:5173; then
-          echo "port=5173" >> $GITHUB_ENV
+          echo "VITE_PORT=5173" >> $GITHUB_ENV
         else
-          echo "port=5174" >> $GITHUB_ENV
+          echo "VITE_PORT=5174" >> $GITHUB_ENV
         fi
 
     - name: Run Cypress tests
-      uses: cypress-io/github-action@v5
-      with:
-        start: npm run dev -- --port ${{ env.port }}
-        wait-on: http://localhost:${{ env.port }}
-        config-file: cypress.config.js
+      run: |
+        npx wait-on http://localhost:${{ env.VITE_PORT }}
+        npx cypress run --config baseUrl=http://localhost:${{ env.VITE_PORT }}
 
     - name: Stop application
       if: always()
