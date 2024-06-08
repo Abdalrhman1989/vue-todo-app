@@ -35,14 +35,12 @@ jobs:
       run: |
         npx vite --port 5173 &
         echo $! > .pidfile
-        npx wait-on http://localhost:5173 || npx wait-on http://localhost:5174
-      env:
-        CI: true
-
-    - name: Get Vite server port
-      id: get-port
-      run: |
-        if lsof -i:5173; then echo "port=5173" >> $GITHUB_ENV; else echo "port=5174" >> $GITHUB_ENV; fi
+        sleep 5  # Wait a few seconds to allow the server to start
+        if lsof -i:5173; then
+          echo "port=5173" >> $GITHUB_ENV
+        else
+          echo "port=5174" >> $GITHUB_ENV
+        fi
 
     - name: Run Cypress tests
       uses: cypress-io/github-action@v5
