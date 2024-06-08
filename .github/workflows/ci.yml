@@ -33,21 +33,22 @@ jobs:
     - name: Start application
       id: start-app
       run: |
-        npm run dev -- --port 5173 &
+        npx vite --port 5173 &
         echo $! > .pidfile
+        npx wait-on http://localhost:5173 || npx wait-on http://localhost:5174
       env:
         CI: true
 
-    - name: Wait for the app to be available
+    - name: Get Vite server port
+      id: get-port
       run: |
-        echo "Waiting for the app to be available..."
-        npx wait-on http://localhost:5173
+        if lsof -i:5173; then echo "port=5173" >> $GITHUB_ENV; else echo "port=5174" >> $GITHUB_ENV; fi
 
     - name: Run Cypress tests
       uses: cypress-io/github-action@v5
       with:
-        start: npm run dev -- --port 5173
-        wait-on: http://localhost:5173
+        start: npm run dev -- --port ${{ env.port }}
+        wait-on: http://localhost:${{ env.port }}
         config-file: cypress.config.js
 
     - name: Stop application
